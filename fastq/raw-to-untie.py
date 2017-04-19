@@ -30,9 +30,9 @@ f_untie_2 = open('%s.untie_2.fastq'%filename_out,'w')
 
 for line in f_fq1:
     h_nseq1 = line.strip()
-    nseq1 = f_fq1.next().strip()
-    h_qseq1 = f_fq1.next().strip()
-    qseq1 = f_fq1.next().strip()
+    nseq1 = next(f_fq1).strip()
+    h_qseq1 = next(f_fq1).strip()
+    qseq1 = next(f_fq1).strip()
     read1_len = len(nseq1)
 
     if len(nfreq1_raw) < read1_len:
@@ -40,10 +40,10 @@ for line in f_fq1:
             nfreq1_raw[tmp_i] = {'A':0,'T':0,'G':0,'C':0,'N':0}
             nfreq1_called[tmp_i] = {'A':0,'T':0,'G':0,'C':0,'N':0}
     
-    h_nseq2 = f_fq2.next().strip()
-    nseq2 = f_fq2.next().strip()
-    h_qseq2 = f_fq2.next().strip()
-    qseq2 = f_fq2.next().strip()
+    h_nseq2 = next(f_fq2).strip()
+    nseq2 = next(f_fq2).strip()
+    h_qseq2 = next(f_fq2).strip()
+    qseq2 = next(f_fq2).strip()
     read2_len = len(nseq2)
 
     if len(nfreq2_raw) < read2_len:
@@ -107,33 +107,34 @@ f_fq2.close()
 f_untie_1.close()
 f_untie_2.close()
 
-f_raw = open('%s_R1.raw.pos_call'%filename_out,'w')
-f_called = open('%s.untie_1.pos_call'%filename_out,'w')
-f_raw.write('Position\tA\tT\tG\tC\tN\n')
-f_called.write('Position\tA\tT\tG\tC\n')
+f_log = open('%s.log'%filename_out,'w')
+f_log.write('#Total pairs: %d\n'%count_total)
+count_fail = count_nocall_12 + count_nocall_1 + count_nocall_2
+f_log.write('#Failed: %d (_1:%d, _2:%d, both:%d)\n'%(count_fail,count_nocall_1,count_nocall_2,count_nocall_12))
+
+f_log.write('#Input: %s\n'%filename_fq1)
+f_log.write('Position\traw.A\traw.T\traw.G\traw.C\traw.N\t')
+f_log.write('A\tT\tG\tC\n')
 
 for tmp_i in range(0,read1_len):
-    f_raw.write('%d\t%d\t%d\t%d\t%d\t%d\n'%\
+    f_log.write('%d\t%d\t%d\t%d\t%d\t%d\t'%\
         (tmp_i,nfreq1_raw[tmp_i]['A'],nfreq1_raw[tmp_i]['T'],\
          nfreq1_raw[tmp_i]['G'],nfreq1_raw[tmp_i]['C'],\
          nfreq1_raw[tmp_i]['N']))
-    f_called.write('%d\t%d\t%d\t%d\t%d\n'%(tmp_i,nfreq1_called[tmp_i]['A'],\
+    f_log.write('%d\t%d\t%d\t%d\t%d\n'%(tmp_i,nfreq1_called[tmp_i]['A'],\
         nfreq1_called[tmp_i]['T'],nfreq1_called[tmp_i]['G'],\
         nfreq1_called[tmp_i]['C']))
-f_raw.close()
-f_called.close()
 
-f_raw = open('%s_R2.raw.pos_call'%filename_out,'w')
-f_called = open('%s.untie_2.pos_call'%filename_out,'w')
-f_raw.write('Position\tA\tT\tG\tC\tN\n')
-f_called.write('Position\tA\tT\tG\tC\n')
+f_log.write('#Input: %s\n'%filename_fq2)
+f_log.write('Position\traw.A\traw.T\traw.G\traw.C\traw.N\t')
+f_log.write('A\tT\tG\tC\n')
 
 for tmp_i in range(0,read2_len):
-    f_raw.write('%d\t%d\t%d\t%d\t%d\t%d\n'%(tmp_i,nfreq2_raw[tmp_i]['A'],\
+    f_log.write('%d\t%d\t%d\t%d\t%d\t%d\n'%(tmp_i,nfreq2_raw[tmp_i]['A'],\
         nfreq2_raw[tmp_i]['T'],nfreq2_raw[tmp_i]['G'],nfreq2_raw[tmp_i]['C'],\
         nfreq2_raw[tmp_i]['N']))
-    f_called.write('%d\t%d\t%d\t%d\t%d\n'%(tmp_i,nfreq2_called[tmp_i]['A'],\
+    f_log.write('%d\t%d\t%d\t%d\t%d\n'%(tmp_i,nfreq2_called[tmp_i]['A'],\
         nfreq2_called[tmp_i]['T'],nfreq2_called[tmp_i]['G'],\
         nfreq2_called[tmp_i]['C']))
-f_raw.close()
-f_called.close()
+
+f_log.close()
