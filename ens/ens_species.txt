@@ -1,0 +1,11 @@
+## For sp_code, see http://www.uniprot.org/docs/speclist 
+ANOCA	anolis_carolinensis
+DANRE	danio_rerio
+CHICK	gallus_gallus
+HUMAN	homo_sapiens
+MOUSE	mus_musculus
+ORYLA	oryzias_latipes
+XENTR	xenopus_tropicalis
+RAT	rattus_norvegicus
+DROME	drosophila_melanogaster
+CAEEL	caenorhabditis_elegans
