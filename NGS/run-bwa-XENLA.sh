@@ -4,9 +4,9 @@ NUM_THREADS=8
 SAMTOOLS="$HOME/miniconda3/bin/samtools"
 BWA="$HOME/miniconda3/bin/bwa"
 
-SAM_BEST="/home/taejoon/git/HTseq-toolbox/sam/sam-to-sam_best.py"
+SAM_BEST="$HOME/git/HTseq-toolbox/sam/sam-to-sam_best.py"
 
-DB="/work/public/db.bwa/XENLA_dna.GCA001663975v1+"
+DB="$HOME/public/db.bwa/XENLA_dna.GCA001663975v1+"
 DBNAME=$(basename $DB)
 
 for FQ1 in $(ls ../fastq/*.fastq.gz)

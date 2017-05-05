@@ -5,7 +5,7 @@ SAMTOOLS="$HOME/miniconda3/bin/samtools"
 
 SAM_BEST="$HOME/git/HTseq-toolbox/sam/sam-to-sam_best.py"
 
-GENOME_DIR="/work/public/db.star/"
+GENOME_DIR="$HOME/public/db.star/"
 DB_NAME="XENLA_dna.GCA001663975v1+"
 #HUMAN_ens85_dna_sm
 #XENTR_dna.GCA000004195v3+
