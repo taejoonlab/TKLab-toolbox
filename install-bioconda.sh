@@ -12,6 +12,8 @@ else
   rm $MINICONDA_INSTALLER
 fi
 
+export PATH=$PATH:~/miniconda3/bin/
+
 ## Setup Bioconda
 conda config --add channels conda-forge
 conda config --add channels defaults
