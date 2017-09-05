@@ -1,0 +1,6 @@
+## For sp_code, see http://www.uniprot.org/docs/speclist 
+ARATH	arabidopsis_thaliana
+CHLRE	chlamydomonas_reinhardtii
+SELML	selaginella_moellendorffii
+MAIZE	zea_mays
+ORYSA	oryza_sativa
