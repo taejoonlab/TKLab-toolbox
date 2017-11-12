@@ -28,7 +28,7 @@ conda install bowtie bowtie2 star bwa gmap \
               blat ucsc-bedGraphToBigWig ucsc-bedSort ucsc-bedClip \
               ucsc-faSplit ucsc-liftUp ucsc-axtChain ucsc-twoBitInfo ucsc-faToTwoBit \
               ucsc-chainMergeSort ucsc-chainSplit ucsc-chainNet ucsc-netChainSubset \
-              blast exonerate
+              blast exonerate flash
 
 ## Install Python2
 PYTHON2_AVAILABLE=0
