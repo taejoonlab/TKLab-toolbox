@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import sys
 import gzip
@@ -27,10 +27,11 @@ def read_fa(filename):
     seq_list = dict()
     f = open(filename,'r')
     if( filename.endswith('.gz') ):
-        f = gzip.open(filename,'rb')
+        f = gzip.open(filename,'rt')
     for line in f:
         if( line.startswith('>') ):
-            seq_h = line.strip().split()[0].lstrip('>')
+            #seq_h = line.strip().split()[0].lstrip('>')
+            seq_h = line.strip().split()[0].lstrip('>').split('.')[0]
             seq_list[seq_h] = []
         else:
             seq_list[seq_h].append(line.strip())
@@ -42,7 +43,7 @@ def read_gtf(filename):
     genome_version = 'Unknown'
     f = open(filename,'r')
     if( filename.endswith('.gz') ):
-        f = gzip.open(filename,'rb')
+        f = gzip.open(filename,'rt')
     for line in f:
         if( line.startswith('#!genome-version') ):
             genome_version = line.strip().split()[1]
@@ -53,7 +54,7 @@ def read_gtf(filename):
         tokens = line.strip().split("\t")
         chr_id = tokens[0]
         chr_pos = '%s:%s:%s:%s:%d'%(genome_version,chr_id,tokens[3],tokens[4],int('%s1'%tokens[6]))
-        if( not rv['gene_count'].has_key(chr_id) ):
+        if( not chr_id in rv['gene_count'] ):
             rv['gene_count'][chr_id] = 0
 
         if( tokens[2] == 'CDS' or tokens[2] == 'transcript' or tokens[2] == 'gene' ):
@@ -76,23 +77,23 @@ def read_gtf(filename):
 
             if( tokens[2] == 'gene' ):
                 rv['gene_count'][chr_id] += 1
-                if( not rv['gene'].has_key(gene_id) ):
+                if( not gene_id in rv['gene'] ):
                     rv['gene'][gene_id] = {'chr_pos':chr_pos, 'gene_name':gene_name, 'tx_list':[], 'prot_list':[]}
                 else:
                     rv['gene'][gene_id]['chr_pos'] = chr_pos
 
             if( tokens[2] == 'transcript' ):
                 rv['tx'][transcript_id] = {'chr_pos':chr_pos, 'gene_name':gene_name, 'gene_id':gene_id, 'prot_list':[]}
-                if( not rv['gene'].has_key(gene_id) ):
+                if( not gene_id in rv['gene'] ):
                     rv['gene'][gene_id] = {'chr_pos':chr_pos, 'gene_name':gene_name, 'tx_list':[], 'prot_list':[]}
                 rv['gene'][gene_id]['tx_list'].append(transcript_id)
             
             if( tokens[2] == 'CDS' ):
                 rv['prot'][protein_id] = {'chr_pos':chr_pos, 'gene_name':gene_name, 'gene_id':gene_id, 'tx_id':transcript_id}
-                if( not rv['gene'].has_key(gene_id) ):
+                if( not gene_id in rv['gene'] ):
                     rv['gene'][gene_id] = {'chr_pos':chr_pos, 'gene_name':gene_name, 'tx_list':[], 'prot_list':[]}
                 rv['gene'][gene_id]['prot_list'].append(protein_id)
-                if( not rv['tx'].has_key(transcript_id) ):
+                if( not transcript_id in rv['tx'] ):
                     rv['tx'][transcript_id] = {'chr_pos':chr_pos, 'gene_name':gene_name, 'gene_id':gene_id, 'prot_list':[]}
                 rv['tx'][transcript_id]['prot_list'].append(protein_id)
     return rv
@@ -113,7 +114,7 @@ for filename_gtf in os.listdir('.'):
     filename_prot = '%s.pep.all.fa.gz'%(filename_base)
 
     out_sp_code = filename_tokens[0]
-    if( sp_code.has_key(out_sp_code) ):
+    if( out_sp_code in sp_code ):
         out_sp_code = sp_code[out_sp_code]
     out_version = filename_tokens[-3]
 
@@ -153,7 +154,7 @@ for filename_gtf in os.listdir('.'):
         tmp_pos = rv_gtf['gene'][gene_id]['chr_pos']
         tmp_chr = tmp_pos.split(':')[1]
         if( is_clean > 0 ):
-            if( not rv_gtf['gene_count'].has_key(tmp_chr) ):
+            if( not tmp_chr in rv_gtf['gene_count'] ):
                 sys.stderr.write('[clean] No gene count: %s\n'%tmp_chr)
                 f_log.write('ChrNoGene\tchr:%s\n'%tmp_chr)
                 continue
@@ -164,7 +165,7 @@ for filename_gtf in os.listdir('.'):
                     f_log.write('ChrClean\tchr:%s\tgene:%s\n'%(tmp_chr,gene_id))
                     continue
                     
-        if( not pos2gene.has_key(tmp_pos) ):
+        if( not tmp_pos in pos2gene ):
             pos2gene[tmp_pos] = []
         pos2gene[tmp_pos].append(gene_id)
 
@@ -186,9 +187,9 @@ for filename_gtf in os.listdir('.'):
             for tx_id in rv_gtf['gene'][gene_id]['tx_list']:
                 tmp_tx2gene[tx_id] = {'gene_id':gene_id, 'gene_name':gene_name}
                 tmp_nseq = ''
-                if( seq_cdna.has_key(tx_id) ):
+                if( tx_id in seq_cdna ):
                     tmp_nseq = ''.join(seq_cdna[tx_id])
-                elif( seq_ncrna.has_key(tx_id) ):
+                elif( tx_id in seq_ncrna ):
                     tmp_nseq = ''.join(seq_ncrna[tx_id])
                 
                 if( tmp_nseq == '' ):
@@ -198,13 +199,13 @@ for filename_gtf in os.listdir('.'):
                     tmp_tx_seq[tx_id] = tmp_nseq
                     tmp_tx_len[tx_id] = len(tmp_nseq)
                 
-                if( rv_gtf['tx'].has_key(tx_id) ):
+                if( tx_id in rv_gtf['tx'] ):
                     for prot_id in rv_gtf['tx'][tx_id]['prot_list']:
                         tmp_pseq = ''
-                        if( seq_prot.has_key(prot_id) ):
+                        if( prot_id in seq_prot ):
                             tmp_pseq = ''.join(seq_prot[prot_id])
                         if( tmp_pseq == '' ):
-                            count_noPep += 1
+                            #count_noPep += 1
                             f_log.write('ProtNoSeq\tprot:%s\ttx:%s\tgene:%s\tname:%s\n'%(prot_id,tx_id,gene_id,gene_name))
                         else:
                             tmp_prot_seq[prot_id] = tmp_pseq
