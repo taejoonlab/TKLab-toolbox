@@ -2,30 +2,29 @@
 import os
 import sys
 
-## Input: (1) gene gff (2) mRNA gff (using extract-gff-by-mol_type.py)
-
-usage_mesg = 'make-gene_tx_list.py <gene gff> <mRNA gff>'
+## Prep code begins.
+pre_py_name = 'extract-gff-by-mol_type.py'
+usage_mesg = '\nUsage: %s <filename_gene_gff> <filename_mrna_gff>\n'%(sys.argv[0])
+usage_mesg += '\t(Create <gene_gff> and <mrna_gff> with %s)\n\n'%(pre_py_name)
 
 def print_usage_and_exit():
-    sys.stderr.write('Usage: %s\n'%usage_mesg)
+    sys.stderr.write(usage_mesg)
     sys.exit(1)
-    
+
 if len(sys.argv) != 3:
     print_usage_and_exit()
 
-filename_gene = sys.argv[1]
-filename_mrna = sys.argv[2]
+filename_gene_gff = sys.argv[1]
+filename_mrna_gff = sys.argv[2]
 
-if not os.access(filename_gene, os.R_OK):
-    sys.stderr.write('%s is not available.\n'%filename_gene)
-    print_usage_and_exit()
-
-if not os.access(filename_mrna,os.R_OK):
-    sys.stderr.write('%s is not available.\n'%filename_mrna)
-    print_usage_and_exit()
+for tmp_in_file in [filename_gene_gff, filename_mrna_gff]:
+    if not os.access(tmp_in_file, os.R_OK):
+        sys.stderr.write('%s is not available.\n'%tmp_in_file)
+        print_usage_and_exit()
+### Prep code ends.
 
 gene_list = dict()
-f_gene = open(filename_gene, 'r')
+f_gene = open(filename_gene_gff, 'r')
 for line in f_gene:
     if line. startswith('#'):
         continue
@@ -44,11 +43,10 @@ for line in f_gene:
         elif tmp_k == 'gene_biotype':
             tmp_biotype = tmp_v
     
-    #print(tmp_id, tmp_name, tmp_biotype)
     gene_list[tmp_id] = {'name':tmp_name, 'biotype':tmp_biotype, 'mrna_list':[]}
 f_gene.close()
 
-f_mrna = open(filename_mrna,'r')
+f_mrna = open(filename_mrna_gff,'r')
 for line in f_mrna:
     if line. startswith('#'):
         continue
