@@ -38,11 +38,16 @@ for line in f_list:
         continue
 
     gene_name = tokens[2]
-    gene_info[ gene_id ] = 'ID=%s;Name=%s'%(gene_id, gene_name)
+    gene_id_name = '%s|%s'%(gene_id, gene_name)
+
+    gene_info[ gene_id ] = 'ID=%s;Name=%s'%(gene_id_name, gene_name)
 
     for mrna_id in tokens[3].split(';'):
-        mrna_info[ mrna_id ] = 'ID=%s;Parent=%s;Name=%s'%(mrna_id, gene_id, gene_name)
-        exon_info[ mrna_id ] = 'Parent=%s;gene_id=%s;transcript_id=%s'%(mrna_id, gene_id, mrna_id)
+        mrna_id_name = '%s|%s'%(mrna_id, gene_name)
+        mrna_info[ mrna_id ] = 'ID=%s;Parent=%s;Name=%s'%\
+                                (mrna_id_name, gene_id_name, gene_name)
+        exon_info[ mrna_id ] = 'Parent=%s;gene_id=%s;transcript_id=%s'%\
+                                (mrna_id_name, gene_id_name, mrna_id_name)
 f_list.close()
 
 f_gff = open(filename_raw_gff,'r')
