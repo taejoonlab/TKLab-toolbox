@@ -1,0 +1,80 @@
+---
+title: "RNA-seq analysis with edgeR"
+output: html_notebook
+---
+
+Set up the read count table.
+```{r}
+
+setwd("D:/Git/data/XenopusHybrid/orig.201806")
+filename_count <- 'Kwon201408_XenopusHybrid_v201806.XL_paternal.txt'
+min_cpm <- 1
+min_cpm_count <- 2
+
+tbl_count <- read.table(filename_count, row.names=1, header=T)
+```
+
+```{r}
+library(edgeR)
+library(limma)
+keep <- rowSums(cpm(tbl_count)>=min_cpm) >= min_cpm_count
+tbl_count <- tbl_count[keep,]
+head(tbl_count)
+```
+
+For QC, check the boxplot and hierarchical clustering with rank-based correlation as a distance.
+
+```{r}
+boxplot(log(tbl_count+0.1, base=2))
+dist_corr <- dist(1-cor(as.matrix(tbl_count), method='spearman'))
+plot(hclust(dist_corr))
+```
+Make groups and batches, based on SampleName. Assume that SampleName is assigned as '<group name>_<batch info>', as 'KnockOut_1'.
+```{r}
+groups <- gsub('_\\d+$','',colnames(tbl_count))
+groups
+batches <- gsub('^\\w+_','',colnames(tbl_count))
+batches
+```
+
+Run EdgeR analysis to identify differentially expressed genes.
+
+```{r}
+library(edgeR)
+
+y1 <- DGEList(counts=tbl_count, group=groups)
+design <- model.matrix(~batches+groups)
+rownames(design) <- colnames(y1)
+y2 <- estimateDisp(y1, design, robust=TRUE)
+fit <- glmQLFit(y2, design, robust=TRUE)
+qlf <- glmQLFTest(fit)
+```
+
+Write the results.
+
+```{r}
+
+total_list <-  topTags(qlf, n=Inf, adjust.method="BH")
+DE_keep <- total_list$table$FDR <= 0.05 & abs(total_list$table$logFC) >= 1
+DE_list <- total_list[DE_keep,]
+
+filename_all <- paste(filename_count, 'edgeR_all.txt', sep='.')
+write.table(total_list, filename_all, sep='\t')
+
+filename_DE <- paste(filename_count, 'edgeR_DE.txt', sep='.')
+write.table(DE_list, filename_DE, sep='\t')
+
+logCPM <- cpm(tbl_count, log=TRUE)
+filename_cpm <- paste(filename_count, 'edgeR_logCPM.txt', sep='.')
+write.table(logCPM, filename_cpm, sep='\t')
+
+library(limma)
+filename_cpm_noBatch <- paste(filename_count, 'edgeR_logCPM_noBatch.txt', sep='.')
+write.table(removeBatchEffect(logCPM, batch=batches), file=filename_cpm_noBatch, sep='\t')
+```
+
+Check the output.
+```{r}
+dir(path='.', pattern='*edgeR*')
+```
+
