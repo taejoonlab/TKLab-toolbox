@@ -10,12 +10,14 @@ def read_count(filename):
     rv = dict()
     f = open(filename,'r')
     for line in f:
-        if( line.startswith('#') ):
+        if line.startswith('#'):
             continue
+
         tokens = line.strip().split("\t")
         t_id = tokens[0]
-        if( t_id == '*' ):
+        if t_id == '*':
             continue
+
         tmp_seqlen = int(tokens[1])
         tmp_count = int(tokens[2])
         rv[t_id] = {'seqlen':tmp_seqlen, 'count': tmp_count}
@@ -34,7 +36,7 @@ for line in f:
     tmp_filename = tokens[ headers.index('Filename') ]
     tmp_group = tokens[ headers.index('GroupName') ]
     tmp_sample = tokens[ headers.index('SampleName') ]
-    if( not exp.has_key(tmp_group) ):
+    if not tmp_group in exp:
         exp[tmp_group] = dict()
         group_list.append(tmp_group)
     exp[tmp_group][tmp_sample] = read_count(tmp_filename)
@@ -59,7 +61,7 @@ for tmp_id in sorted(list(set(gene_list))):
     for tmp_group in group_list:
         count_sum = 0
         for tmp_sample in exp[tmp_group].keys():
-            if( exp[tmp_group][tmp_sample].has_key(tmp_id) ):
+            if tmp_id in exp[tmp_group][tmp_sample]:
                 tmp_count = exp[tmp_group][tmp_sample][tmp_id]['count']
                 count_indiv[tmp_sample] = tmp_count
                 count_sum += tmp_count
@@ -69,9 +71,10 @@ for tmp_id in sorted(list(set(gene_list))):
                 count_indiv[tmp_sample] = 0
         count_mean[tmp_group] = count_sum*1.0/len(exp[tmp_group])
     
-    if( count_nonzero < 2 or sum(count_indiv.values()) < 2 ):
+    if count_nonzero < 2 or sum(count_indiv.values()) < 2:
         f_low_count.write('%s\t%s\n'%(tmp_id,'\t'.join(['%d'%count_indiv[x] for x in sample_list])))
         continue
+
     f_indiv_count.write('%s\t%s\n'%(tmp_id,'\t'.join(['%d'%count_indiv[x] for x in sample_list])))
     f_mean_count.write('%s\t%s\n'%(tmp_id,'\t'.join(['%d'%count_mean[x] for x in group_list])))
 
