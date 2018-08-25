@@ -16,9 +16,9 @@ f_fa = open('%s.fa' % (filename_base), 'w')
 for line in f_fastq:
     if line.startswith('@'):
         header = line.strip()
-        nseq = f_fastq.next().strip()
-        h2 = f_fastq.next().strip()
-        qseq = f_fastq.next().strip()
+        nseq = next(f_fastq).strip()
+        h2 = next(f_fastq).strip()
+        qseq = next(f_fastq).strip()
         f_fa.write(">%s\n%s\n" % (header.lstrip('@'), nseq))
 f_fastq.close()
 f_fa.close()
