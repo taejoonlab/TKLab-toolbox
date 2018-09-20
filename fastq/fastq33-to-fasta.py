@@ -19,6 +19,16 @@ for line in f_fastq:
         nseq = next(f_fastq).strip()
         h2 = next(f_fastq).strip()
         qseq = next(f_fastq).strip()
-        f_fa.write(">%s\n%s\n" % (header.lstrip('@'), nseq))
+
+        str_list = []
+        tmp_i = 0
+        for tmp_q in [ord(x)-33 for x in qseq]:
+            if tmp_q < 20:
+                str_list.append(nseq[tmp_i].lower())
+            else:
+                str_list.append(nseq[tmp_i].upper())
+            tmp_i += 1
+
+        f_fa.write(">%s\n%s\n" % (header.lstrip('@'), ''.join(str_list)))
 f_fastq.close()
 f_fa.close()
