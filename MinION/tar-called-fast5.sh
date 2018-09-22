@@ -23,22 +23,6 @@ cat $DIR_FAIL/*fastq > $DIR_NAME".fail.fastq"
 ## Archive logs
 tar cvzpf $DIR_NAME.log.tgz  $DIR_NAME/called/*.*
 
-## Archive raw fast5
-SUBDIR_RAW=($(ls -d $DIR_RAW/*/))
-SUBDIR_RAW_LEN=${#SUBDIR_RAW[@]}
-
-for ((i=0; i<$SUBDIR_RAW_LEN;i+=10));
-do
-  IDX=$(( i / 10 ))
-  TGZ_OUT=$DIR_NAME".fast5_raw_"$IDX"n.tgz"
-  DIR_IN="$DIR_RAW/"$IDX"?/"
-  if [ $i == 0 ]; then
-    DIR_IN="$DIR_RAW/?/"
-  fi
-  echo $TGZ_OUT
-  tar cvzpf $TGZ_OUT $DIR_IN
-done
-
 ## Archive passed fast5
 SUBDIR_PASS=($(ls -d $DIR_PASS/*/))
 SUBDIR_PASS_LEN=${#SUBDIR_PASS[@]}
