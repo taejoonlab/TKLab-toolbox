@@ -8,7 +8,7 @@ h_fa = ''
 seqlen = dict()
 f_fa = open(filename_fa, 'r')
 if filename_fa.endswith('.gz'):
-    f_fa = gzip.open(filename_fa, 'rb')
+    f_fa = gzip.open(filename_fa, 'rt')
 
 for line in f_fa:
     if line.startswith('>'):
