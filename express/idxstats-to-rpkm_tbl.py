@@ -32,6 +32,8 @@ gene_list = []
 f = open(filename_conf,'r')
 headers = f.readline().strip().split("\t")
 for line in f:
+    if line.startswith('#'):
+        continue
     tokens = line.strip().split()
     tmp_filename = tokens[ headers.index('Filename') ]
     tmp_group = tokens[ headers.index('GroupName') ]
