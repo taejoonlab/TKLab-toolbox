@@ -9,3 +9,4 @@ XENTR	xenopus_tropicalis
 RAT	rattus_norvegicus
 DROME	drosophila_melanogaster
 CAEEL	caenorhabditis_elegans
+LATCH	latimeria_chalumnae
