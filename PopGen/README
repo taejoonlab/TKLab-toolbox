@@ -1,0 +1,78 @@
+
+Input : TKLab... file
+Output : arrange_sample
+1. >python arrange_fastaq.py [folder]
+ select only read starts with enzyme cutsite (GATC, TAG)
+
+Input : arrange_1P , arrange_2P
+Output : mms....fasta
+2. >cat [individual readfiles] > mms****.fasta
+ merge output arranged file 
+
+Input : mms....fasta
+Output : abc_mms....fasta
+3. >python alphabetically.py [folder]
+ order reads with alphabetical order
+ (to select only duplicated reads without removing them)
+
+Input : abc_mms....fasta
+Output : uniq_mms....fasta
+4. >python only_duplicated.py [folder]
+ select only duplicated reads
+
+Input : uniq_mms....fasta
+Output : enzyme selected fasta
+5. >python enzyme_site.py [folder]
+ divide reads depend on enzymecutsite
+
+Input : enzyme selected fasta
+Output : enzyme selected .uc
+6. >usearch -id 0.95 -cluster_fast [each_sample] -uc [sample.uc]
+ self clustering to find dominant sequence
+
+Input : each .uc file
+Output : each.cluster
+7. >python arrange_cluster.py 0 [folder]
+ re-arrange uc file to table set to compare each nucleotide (0 for self-clustering)
+
+Input : each.cluster
+Output : dom_sample
+8. >python dominant_nucl.py [folder]
+ only record most dominant nucleotide in one cluster
+
+Input : dom_sample
+Output : species.fasta
+9. >cat [dominant_samples] > [species.fasta]
+ merge samples into one fasta file for clustering
+
+Input : species.fasta
+Output : species.uc
+10. >usearch -id 0.95 -cluster_fast [species.fasta] -uc [species.uc]
+ ucluster for each species
+
+Input : species.uc
+Output : species.cluster
+11. >python arrange_cluster.py [threshold] [folder]
+ re-arrange uc file to table set to compare each nucleotide (threshold : how many sample is included in cluster)
+
+Input : species.cluster
+Output : uniq_tag_species.txt
+12. >python select_SNP.py
+
+Input : uniq_tag_species.txt
+Output : SNP_file
+13. >python make_musclefile.py
+
+Input : SNP_file
+Output : phy file
+14.
+mucle_proteome/muscle/muscle3.8.31_i86linux64 -profile -in1 tagSNP_6883.txt -in2 tagSNP_0621-1.txt -out muscle_out1
+mucle_proteome/muscle/muscle3.8.31_i86linux64 -profile -in1 muscle_out1 -in2 tagSNP_0725-2.txt -out muscle_out2
+mucle_proteome/muscle/muscle3.8.31_i86linux64 -profile -in1 muscle_out2 -in2 tagSNP_0725-3.txt -out muscle_out3
+mucle_proteome/muscle/muscle3.8.31_i86linux64 -maketree -in muscle_out3 -out tagfrog.phy
+
+Input : phy file
+Output : bmp file
+15. >python phy2bmp.py
+
+

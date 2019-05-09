@@ -30,6 +30,9 @@ conda install bowtie bowtie2 star bwa gmap \
               ucsc-chainMergeSort ucsc-chainSplit ucsc-chainNet ucsc-netChainSubset \
               blast exonerate flash
 
+## install packages for NuevoTx
+conda install fasttree dendropy
+
 ## Install Python2
 PYTHON2_AVAILABLE=0
 for CONDA_ENV in $(conda env list)
