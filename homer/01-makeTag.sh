@@ -11,4 +11,4 @@ OUT_DIR="tags.MyTF"
 # Use '-single' for the genome with many scaffolds 
 # (make a single output file instead of each file per chromosome/scaffold)
 
-makeTagDirectory $OUT_DIR -format SAM -single $BAM_CHIP
+makeTagDirectory $OUT_DIR -format sam -single $BAM_CHIP
