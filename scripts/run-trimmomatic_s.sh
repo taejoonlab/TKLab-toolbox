@@ -1,10 +1,30 @@
 #!/bin/bash
 
-## Assume that you install trimmomatic with conda
-## Directory for conda
+NUM_THREADS=4
+
+# Assume that you install trimmomatic with conda
+#
+# https://anaconda.org/bioconda/trimmomatic
+#
+# $ conda install -c bioconda trimmomatic
+
+# Directory for conda
 DIR_CONDA=$HOME/miniconda3
 
-FA_ADAPTER=$( find $DIR_CONDA | grep -m1 TruSeq3-PE.fa )
+## For TruSeq
+FA_ADAPTER=$( find $DIR_CONDA | grep -m1 TruSeq3-SE.fa )
+
+## For Nextera (Tn5)
+#FA_ADAPTER=$( find $DIR_CONDA | grep -m1 NexteraPE-PE.fa )
+
+## List of adapters
+#NexteraPE-PE.fa
+#TruSeq2-PE.fa
+#TruSeq2-SE.fa
+#TruSeq3-PE-2.fa
+#TruSeq3-PE.fa
+#TruSeq3-SE.fa
+
 echo "Adapter: "$FA_ADAPTER
 cp $FA_ADAPTER .
 
@@ -31,8 +51,6 @@ do
   # LEADING:<quality> Specifies the minimum quality required to keep a base.
   # TRAILING:<quality> Specifies the minimum quality required to keep a base.
   # MINLEN:<length>  Specifies the minimum length of reads to be kept.
-
-  trimmomatic PE -validatePairs -summary $OUT".summary" $FQ1 $FQ2 -baseout $OUT \
+  
+  trimmomatic SE -threads $NUM_THREADS -summary $OUT".summary" $FQ1 $OUT \
    ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
-done
-
