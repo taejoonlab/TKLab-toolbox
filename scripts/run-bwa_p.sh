@@ -20,7 +20,7 @@ do
 
   if [ ! -e $SAM ]; then
     echo "Make $SAM"
-    bwa mem -t $NUM_THREADS $DB $FQ1 $FQ2 > $SAM
+    bwa mem -M -t $NUM_THREADS $DB $FQ1 $FQ2 > $SAM
   fi
     
 
@@ -35,15 +35,16 @@ do
     samtools index -@ $NUM_THREADS $SORTED_BAM
   fi
 
-  RMDUP_BAM=${SAM/.sam/}".rmdup.bam"
-  if [ -e $SORTED_BAM ] && [ ! -e $RMDUP_BAM ]; then
-    echo "Make $RMDUP_BAM"
-    samtools rmdup -s --output-fmt BAM $SORTED_BAM $RMDUP_BAM
-  fi
+  # Optional. Remove duplicates.
+  #RMDUP_BAM=${SAM/.sam/}".rmdup.bam"
+  #if [ -e $SORTED_BAM ] && [ ! -e $RMDUP_BAM ]; then
+  #  echo "Make $RMDUP_BAM"
+  #  samtools rmdup -s --output-fmt BAM $SORTED_BAM $RMDUP_BAM
+  #fi
   
-  BAI=$RMDUP_BAM".bai"
-  if [ -e $RMDUP_BAM ] && [ ! -e $BAI ]; then
-    echo "Make $BAI "
-    samtools index -@ $NUM_THREADS $RMDUP_BAM
-  fi
+  #BAI=$RMDUP_BAM".bai"
+  #if [ -e $RMDUP_BAM ] && [ ! -e $BAI ]; then
+  #  echo "Make $BAI "
+  #  samtools index -@ $NUM_THREADS $RMDUP_BAM
+  #fi
 done
