@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os
 import sys
 import gzip
@@ -6,30 +6,33 @@ import gzip
 query_prefix = sys.argv[1]
 
 is_clean = 1
-if( len(sys.argv) > 2 and sys.argv[2] == 'all' ):
+if len(sys.argv) > 2 and sys.argv[2] == 'all':
     is_clean = 0
 
-## GTF snip
-#>ENST00000415118 havana_ig_gene:known chromosome:GRCh38:14:22438547:22438554:1 gene:ENSG00000223997 gene_biotype:TR_D_gene transcript_biotype:TR_D_gene
+# GTF snip
+# >ENST00000415118 havana_ig_gene:known chromosome:GRCh38:14:22438547:22438554:1 gene:ENSG00000223997 gene_biotype:TR_D_gene transcript_biotype:TR_D_gene
 
 sp_code = dict()
 dirname_base = os.path.dirname( os.path.realpath(__file__) )
-f_list = open(os.path.join(dirname_base,'ens_species.txt'),'r')
+
+f_list = open(os.path.join(dirname_base, 'ens_species.txt'), 'r')
 for line in f_list:
-    if( line.startswith('#') ):
+    if line.startswith('#'):
         continue
     tmp_tokens = line.strip().split()
     sp_code[ tmp_tokens[1].capitalize() ] = tmp_tokens[0]
 f_list.close()
 
+
 def read_fa(filename):
     seq_h = ''
     seq_list = dict()
-    f = open(filename,'r')
-    if( filename.endswith('.gz') ):
-        f = gzip.open(filename,'rb')
+    f = open(filename, 'r')
+    if filename.endswith('.gz'):
+        f = gzip.open(filename,'rt')
+
     for line in f:
-        if( line.startswith('>') ):
+        if line.startswith('>'):
             seq_h = line.strip().split()[0].lstrip('>')
             seq_list[seq_h] = []
         else:
@@ -204,7 +207,7 @@ for filename_gtf in os.listdir('.'):
                         if( seq_prot.has_key(prot_id) ):
                             tmp_pseq = ''.join(seq_prot[prot_id])
                         if( tmp_pseq == '' ):
-                            count_noPep += 1
+                            #count_noPep += 1
                             f_log.write('ProtNoSeq\tprot:%s\ttx:%s\tgene:%s\tname:%s\n'%(prot_id,tx_id,gene_id,gene_name))
                         else:
                             tmp_prot_seq[prot_id] = tmp_pseq
@@ -235,11 +238,10 @@ for filename_gtf in os.listdir('.'):
     f_ncdna.close()
     f_prot.close()
 
-if( with_gtf > 0 ):
-    sys.stderr.write('TxNoSeq: %d\n'%count_noTx)
-    sys.stderr.write('cDNA/prot: %d\n'%count_cdna)
-    sys.stderr.write('ncDNA: %d\n'%count_ncdna)
-    f_log.write('#TxNoSeq: %d\n'%count_noTx)
-    f_log.write('#cDNA/prot: %d\n'%count_cdna)
-    f_log.write('#ncDNA: %d\n'%count_ncdna)
-
+if with_gtf > 0:
+    sys.stderr.write('TxNoSeq: %d\n' % count_noTx)
+    sys.stderr.write('cDNA/prot: %d\n' % count_cdna)
+    sys.stderr.write('ncDNA: %d\n' % count_ncdna)
+    f_log.write('# TxNoSeq: %d\n' % count_noTx)
+    f_log.write('# cDNA/prot: %d\n' % count_cdna)
+    f_log.write('# ncDNA: %d\n' % count_ncdna)
