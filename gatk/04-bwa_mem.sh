@@ -1,6 +1,6 @@
-#!/bin/bah
+#!/bin/bash
 
-DB="~/db.bwa/Homo_sapiens_assembly38.fasta"
+DB="~/db.bwa/Homo_sapiens_assembly38.fasta.64"
 FQ_i="./fastq/DSMC202003_HUMANg_OvC-P01_Organoid.i_marked.fastq.gz"
 
 OUT=$(basename $FQ_i)
