@@ -6,12 +6,21 @@ import re
 
 query_prefix = sys.argv[1]
 
+<<<<<<< HEAD
+is_clean = 1
+if len(sys.argv) > 2 and sys.argv[2] == 'all':
+    is_clean = 0
+
+# GTF snip
+# >ENST00000415118 havana_ig_gene:known chromosome:GRCh38:14:22438547:22438554:1 gene:ENSG00000223997 gene_biotype:TR_D_gene transcript_biotype:TR_D_gene
+=======
 usage_mesg = 'Usage : %s <Species prefix (e.g. Homo)>\n' % (os.path.basename(__file__))
 usage_mesg += ' Append "clean" to consider genes on chromosomes only'
 
 is_clean = 0
 if len(sys.argv) > 2 and sys.argv[2] == 'clean':
     is_clean = 1
+>>>>>>> e6fe03ddbbc475750970a836a845c86c0d8db03e
 
 if len(sys.argv) < 1:
     sys.stderr.write(usage_mesg + '\n')
@@ -24,7 +33,12 @@ if len(sys.argv) < 1:
 
 # Read speceis info
 sp_code = dict()
+<<<<<<< HEAD
+dirname_base = os.path.dirname( os.path.realpath(__file__) )
+
+=======
 dirname_base = os.path.dirname(os.path.realpath(__file__))
+>>>>>>> e6fe03ddbbc475750970a836a845c86c0d8db03e
 f_list = open(os.path.join(dirname_base, 'ens_species.txt'), 'r')
 for line in f_list:
     if line.startswith('#'):
@@ -40,6 +54,13 @@ def read_fa(filename):
     seq_list = dict()
     f = open(filename, 'r')
     if filename.endswith('.gz'):
+<<<<<<< HEAD
+        f = gzip.open(filename,'rt')
+
+    for line in f:
+        if line.startswith('>'):
+            seq_h = line.strip().split()[0].lstrip('>')
+=======
         f = gzip.open(filename, 'rt')
 
     for line in f:
@@ -47,6 +68,7 @@ def read_fa(filename):
             seq_h = line.lstrip().lstrip('>').strip().split()[0]
             # Remove subversion info from the ID
             seq_h = re.sub(r'\.[0-9]+$','', seq_h)
+>>>>>>> e6fe03ddbbc475750970a836a845c86c0d8db03e
             seq_list[seq_h] = []
         else:
             seq_list[seq_h].append(line.strip())
@@ -267,12 +289,18 @@ for filename_gtf in os.listdir('.'):
                         tmp_pseq = ''
                         if prot_id in seq_prot:
                             tmp_pseq = ''.join(seq_prot[prot_id])
+<<<<<<< HEAD
+                        if( tmp_pseq == '' ):
+                            #count_noPep += 1
+                            f_log.write('ProtNoSeq\tprot:%s\ttx:%s\tgene:%s\tname:%s\n'%(prot_id,tx_id,gene_id,gene_name))
+=======
                         if tmp_pseq == '':
                             # count_noPep += 1
                             f_log.write(
                                 'ProtNoSeq\tprot:%s\ttx:%s\tgene:%s\tname:%s\n'
                                 % (prot_id, tx_id, gene_id, gene_name)
                                 )
+>>>>>>> e6fe03ddbbc475750970a836a845c86c0d8db03e
                         else:
                             tmp_prot_seq[prot_id] = tmp_pseq
                             tmp_prot_len[prot_id] = len(tmp_pseq)
