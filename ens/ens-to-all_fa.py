@@ -169,6 +169,7 @@ for filename_gtf in os.listdir('.'):
         pos2gene[tmp_pos].append(gene_id)
 
     count_noTx = 0
+    count_noPep = 0
     count_cdna = 0
     count_ncdna = 0
     for tmp_pos in sorted(pos2gene.keys()):
