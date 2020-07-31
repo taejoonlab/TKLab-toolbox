@@ -1,7 +1,7 @@
 #!/bin/bash
 
-wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/relnotes.txt
-wget https://www.uniprot.org/docs/speclist
+curl -O ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/relnotes.txt
+curl -O https://www.uniprot.org/docs/speclist
 
 SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REF_LIST=$SRC_DIR"/uniprot_references.txt"
