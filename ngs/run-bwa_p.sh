@@ -1,7 +1,7 @@
 #!/bin/bash
-NUM_THREADS=16
+NUM_THREADS=8
 
-DB="/home/taejoon/pub/db.bwa/HUMAN_ens85_dna_sm"
+DB="$HOME/db.bwa/hg38_ref"
 DBNAME=$(basename $DB)
 
 for FQ1 in $(ls ../fastq/*_1P)
@@ -11,9 +11,12 @@ do
   SAM=$(basename $FQ1)
   SAM=${SAM/_1P/}"."$DBNAME".bwa_mem.sam"
   BAM=${SAM/.sam/}".bam"
-  SORTED_BAM=${SAM/.sam/}".sorted.bam"
+  SORT_N=${SAM/.sam/}".sortN.bam"
+  FIXMATE=${SAM/.sam/}".fixmate.bam"
+  SORT_C=${SAM/.sam/}".sortC.bam"
+  MARKDUP=${SAM/.sam/}".markdup.bam"
 
-  if [ -e $SORTED_BAM ]; then
+  if [ -e $MARKDUP ]; then
     echo "Skip $FQ1"
     continue
   fi
@@ -29,22 +32,21 @@ do
     samtools view -h -@ $NUM_THREADS -o $BAM $SAM
   fi
 
-  if [ -e $BAM ] && [ ! -e $SORTED_BAM ]; then
-    echo "Make $SORTED_BAM"
-    samtools sort -@ $NUM_THREADS -o $SORTED_BAM $BAM
-    samtools index -@ $NUM_THREADS $SORTED_BAM
+  if [ -e $BAM ] && [ ! -e $SORT_N ]; then
+    echo "Make $SORT_N"
+    samtools sort -n -@ $NUM_THREADS --output-fmt BAM -o $SORT_N $BAM
+    samtools fixmate -m -@ $NUM_THREADS --output-fmt BAM $SORT_N $FIXMATE
   fi
 
-  # Optional. Remove duplicates.
-  #RMDUP_BAM=${SAM/.sam/}".rmdup.bam"
-  #if [ -e $SORTED_BAM ] && [ ! -e $RMDUP_BAM ]; then
-  #  echo "Make $RMDUP_BAM"
-  #  samtools rmdup -s --output-fmt BAM $SORTED_BAM $RMDUP_BAM
-  #fi
-  
-  #BAI=$RMDUP_BAM".bai"
-  #if [ -e $RMDUP_BAM ] && [ ! -e $BAI ]; then
-  #  echo "Make $BAI "
-  #  samtools index -@ $NUM_THREADS $RMDUP_BAM
-  #fi
+  if [ -e $FIXMATE ] && [ ! -e $SORT_C ]; then
+    echo "Make $SORT_C"
+    samtools sort -@ $NUM_THREADS --output-fmt BAM -o $SORT_C $FIXMATE
+    samtools index -@ $NUM_THREADS $SORT_C
+  fi
+
+  if [ -e $MARKDUP ]; then
+    echo "Make $MARKDUP"
+    samtools markdup -@ $NUM_THREADS -s -r $SORT_C $MARKDUP
+    samtools index -@ $NUM_THREADS $MARKDUP
+  fi
 done
