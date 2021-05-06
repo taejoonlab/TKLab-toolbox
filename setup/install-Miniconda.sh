@@ -14,3 +14,6 @@ else
   ./$MINICONDA_INSTALLER
   rm $MINICONDA_INSTALLER
 fi
+
+conda config --add channels bioconda
+conda config --add channels conda-forge
