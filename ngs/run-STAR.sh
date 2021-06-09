@@ -1,10 +1,20 @@
-STAR --genomeLoad Remove --genomeDir ~/pub/db.star/HUMAN_ens85_dna_sm
+#!/bin/bash
 
-for FQ1 in $(ls ../fastq/*untie_1.fastq.gz)
+NUM_THREADS=8
+
+GENOME_DIR="<STAR DB DIR>"
+DB_GTF="<GTF FILE>"
+
+for FQ1 in $(ls ../fastq/*_1P.gz)
 do
-  FQ2=${FQ1/untie_1/untie_2}
+  FQ2=${FQ1/_1P/_2P}
   OUT=$(basename $FQ1)
-  OUT=${OUT/.untie_1.fastq.gz/}"."
-  STAR --genomeDir ~/pub/db.star/HUMAN_ens85_dna_sm --runThreadN 16 --readFilesIn $FQ1 $FQ2 --readFilesCommand zcat --outSAMtype BAM SortedByCoordinate --outFileNamePrefix $OUT --limitBAMsortRAM 50000000000
+  OUT=${OUT/_trim_1P.gz/}"."
+  STAR --genomeDir $GENOME_DIR --runThreadN $NUM_THREADS \
+      --readFilesIn $FQ1 $FQ2 --readFilesCommand zcat \
+      --outSAMtype BAM SortedByCoordinate  \
+      --outFileNamePrefix $OUT \
+      --limitBAMsortRAM 1000000000 \
+      --sjdbGTFfile $DB_GTF \
+      --sjdbOverhang 100
 done
-

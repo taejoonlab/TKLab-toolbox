@@ -1,11 +1,13 @@
-!/bin/bash
-
-NUM_THREADS=16
+#!/bin/bash
 
 # Install STAR using conda
 # $ conda install -c bioconda STAR
 
-DB_FASTA="XENLA_dna.GCA001663975v1+.fa"
+NUM_THREADS=10
 
-$STAR --runThreadN $NUM_THREADS --runMode genomeGenerate --genomeDir db.star \
-  --genomeFastaFiles $DB_FASTA
+DB_FASTA="GRCm39.primary_assembly.genome.fa"
+DB_GTF="gencode.vM26.primary_assembly.annotation.gtf"
+DB_DIR="db.STAR"
+
+STAR --runThreadN $NUM_THREADS --runMode genomeGenerate --genomeDir $DB_DIR \
+  --genomeFastaFiles $DB_FASTA --sjdbGTFfile $DB_GTF --sjdbOverhang 100
