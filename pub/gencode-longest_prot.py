@@ -18,7 +18,13 @@ for line in f_fa:
         tmp_gene_name = tmp_tokens[-2]
         tmp_seqlen = int(tmp_tokens[-1])
 
-        tmp_gene = '%s|%s' % (tmp_gene_name, tmp_gene_id)
+        tmp_species = 'Unknown'
+        if tmp_gene_id.startswith('ENSG0'):
+            tmp_species = 'HUMAN'
+        if tmp_gene_id.startswith('ENSMUSG0'):
+            tmp_species = 'MOUSE'
+
+        tmp_gene = '%s|%s|%s' % (tmp_gene_name, tmp_species, tmp_gene_id)
         if tmp_gene not in seq_list:
             seq_list[tmp_gene] = dict()
             seqlen_list[tmp_gene] = dict()
