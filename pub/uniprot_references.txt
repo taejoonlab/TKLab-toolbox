@@ -1,0 +1,17 @@
+#UniProt_ID	UP_taxId	EN_taxId	sp_code	sp_name
+UP000005640	9606	9606	HUMAN	homo_sapiens
+UP000002494	10116	10116	RAT	rattus_norvegicus
+UP000000589	10090	10090	MOUSE	mus_musculus
+UP000000539	9031	9031	CHICK	gallus_gallus
+UP000001646	28377	28377	ANOCA	anolis_carolinensis
+UP000008143	8364	8364	XENTR	xenopus_tropicalis
+UP000000437	7955	7955	DANRE	danio_rerio
+UP000001038	8090	8090	ORYLA	oryzias_latipes
+UP000007303	99883	99883	TETNI	tetraodon_nigroviridis
+UP000008672	7897	7897	LATCH	latimeria_chalumnae
+UP000314986	7868	7868	CALMI	callorhinchus_milii
+UP000000803	7227	7227	DROME	drosophila_melanogaster
+UP000001940	6239	6239	CAEEL	caenorhabditis_elegans
+UP000008144	7719	7719	CIOIN	ciona_intestinalis
+UP000002311	559292	4932	YEAST	saccharomyces_cerevisiae
+UP000186698	8355	8355	XENLA	xenopus_laevis
