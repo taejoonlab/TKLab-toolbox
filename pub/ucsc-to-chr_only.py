@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import gzip
 
 filename_fa = sys.argv[1]
 
