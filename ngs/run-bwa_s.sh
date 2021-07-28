@@ -34,7 +34,7 @@ do
     samtools index -@ $NUM_THREADS $SORT_C
   fi
 
-  if [ -e $MARKDUP ]; then
+  if [ ! -e $MARKDUP ]; then
     echo "Make $MARKDUP"
     samtools markdup -@ $NUM_THREADS -s -r $SORT_C $MARKDUP
     samtools index -@ $NUM_THREADS $MARKDUP
