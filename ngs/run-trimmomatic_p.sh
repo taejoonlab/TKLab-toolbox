@@ -52,6 +52,6 @@ do
   # MINLEN:<length>  Specifies the minimum length of reads to be kept.
 
   trimmomatic PE -validatePairs -threads $NUM_THREADS -summary $OUT".summary" $FQ1 $FQ2 -baseout $OUT \
-   ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+   ILLUMINACLIP:$FA_ADAPTER:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
 done
 
