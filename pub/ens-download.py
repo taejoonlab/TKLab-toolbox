@@ -4,7 +4,7 @@ from ftplib import FTP
 import sys
 import os
 
-usage_mesg = 'ens-download.py <two-digits ensembl version)>'
+usage_mesg = 'ens-download.py <three-digits ensembl version)>'
 
 if len(sys.argv) < 2:
     sys.stderr.write('Usage: %s\n' % usage_mesg)
@@ -41,11 +41,14 @@ def download_suffix(ftp, tmp_suffix):
 
 
 for tmp_sp in species_list:
-    tmp_dir_gtf = '/pub/release-%02d/gtf/%s/' % (int(release_ver), tmp_sp)
-    ftp.cwd(tmp_dir_gtf)
-    download_suffix(ftp, '%02d.gtf.gz' % (int(release_ver)))
+    if not tmp_sp.startswith('pet'):
+        continue
 
-    tmp_dir_fasta = '/pub/release-%02d/fasta/%s/' % (int(release_ver), tmp_sp)
+    tmp_dir_gtf = '/pub/release-%03d/gtf/%s/' % (int(release_ver), tmp_sp)
+    ftp.cwd(tmp_dir_gtf)
+    download_suffix(ftp, '%03d.gtf.gz' % (int(release_ver)))
+
+    tmp_dir_fasta = '/pub/release-%03d/fasta/%s/' % (int(release_ver), tmp_sp)
     ftp.cwd(tmp_dir_fasta)
 
     ftp.cwd('./cdna')
