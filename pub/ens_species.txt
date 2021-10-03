@@ -11,3 +11,4 @@ LATCH	latimeria_chalumnae
 DROME	drosophila_melanogaster
 CIOIN	ciona_intestinalis
 CAEEL	caenorhabditis_elegans
+PETMA	petromyzon_marinus
