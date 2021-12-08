@@ -1,0 +1,19 @@
+[gene-expression]
+reference,/home/taejoon/xenopus.stx/XENTR_10X/xenTro9_annot
+expect-cells,5000
+r1-length,26
+
+[feature]
+r1-length,26
+
+[libraries]
+fastq_id,fastqs,feature_types
+LP_GE,/home/taejoon/xenopus.stx/DoreyLab202112_XENTRstx/fastq.GE,Gene Expression
+LP_CML,/home/taejoon/xenopus.stx/DoreyLab202112_XENTRstx/fastq.CML,Multiplexing Capture
+
+[samples]
+sample_id,cmo_ids
+XtSCIday0,CMO306
+XtSCIday1,CMO307
+XtSCIday3,CMO308
+XtSCIday5,CMO309
