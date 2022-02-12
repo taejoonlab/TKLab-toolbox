@@ -29,9 +29,13 @@ echo "Adapter: "$FA_ADAPTER
 cp $FA_ADAPTER .
 
 for FQ1 in $(ls *R1.raw.fastq.gz)
+#for FQ1 in $(ls *R1.raw.fastq)
 do
   FQ2=${FQ1/_R1/_R2}
-  OUT=${FQ1/_R1.raw.fastq.gz}"_trim"
+  OUT=${FQ1/_R1.raw.fastq/}
+  OUT=${OUT/.gz/}
+  OUT=$OUT"_trim"
+
   echo $FQ1 $FQ2 $OUT
 
   # ILLUMINACLIP:<fastaWithAdaptersEtc>:<seed mismatches>:<palindrome clip threshold>:<simple clip threshold> 
@@ -53,4 +57,5 @@ do
   # MINLEN:<length>  Specifies the minimum length of reads to be kept.
   
   trimmomatic SE -threads $NUM_THREADS -summary $OUT".summary" $FQ1 $OUT \
-   ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+   ILLUMINACLIP:$FA_ADAPTER:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+done
