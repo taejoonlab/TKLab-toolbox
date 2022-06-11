@@ -7,7 +7,7 @@ do
 	FQ2=${FQ1/_R1/_R2}
   FQ2_OUT=${FQ1_OUT/_R1/_R2}
 
-  cutadapt --cores=16 --max-n 1 --pair-filter=both \
+  cutadapt --cores=16 --max-n 1 --pair-filter=any \
     -a AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA -A AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG \
     --minimum-length 50 \
     -o $FQ1_OUT -p $FQ2_OUT \
