@@ -1,5 +1,10 @@
 #!/bin/bash
 
+## A script to concatenate paired-end reads with flash. 
+
+## Installation via conda
+# $ conda install -c bioconda flash
+
 NUM_THREADS=4
 MAX_OVERLAP=140  # ReadLength - 10 bp
 
